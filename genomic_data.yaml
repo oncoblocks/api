@@ -17,28 +17,40 @@ produces:
 paths:
   /signal:
     get:
-      summary: Get Discrete or Continuous Signal Data.
-      description: Get Discrete or Continuous Signal Data, such as expression data, phosphoproteomic data or discretized copy number data.
+      summary: Get discrete or continuous signal data.
+      description: Get discrete or continuous signal data, such as expression data, phosphoproteomic data or discretized copy number data.
       parameters:
-        - name: stable_sample_id
+        - name: sample_id
           in: query
-          description: Zero or more sample IDs.
+          description: Samples ID(s).
           required: false
           type: array
           items:
             type: string
         - name: entrez_gene_id
           in: query
-          description: Entrez Gene Ids.
+          description: Entrez Gene ID(s).
           required: false
           type: array
           items:
             type: integer
-        - name: stable_study_id
+        - name:  genome_coordinate
+          in:  query
+          description:  Genome coordinate(s), of the form chr:start-end.
+          required:  false
+          type:  array
+          items:
+            type:  string
+        - name: study_id
           in: query
-          description: Zero or more sample IDs.
+          description: Study ID(s).
           required: false
           type: string
+        - name:  data_set_id
+          in:  query
+          description:  Data set ID.
+          required:  true
+          type:  string
       responses:
         200:
           description: an array of signal objects.
@@ -47,23 +59,72 @@ paths:
             type: array
             items:
               $ref: SignalData
-definitions:
-    SignalData:
-      properties:
-        stable_sample_id:
-          type: integer
-          format: int32
-          description: Stable sample ID.
-        gene_id:
-          type: integer
-          format: int32
-          description: Entrez gene ID.
-        gene_symbol:
+  /copy_number_regions:
+    get:
+      summary: Get copy number regions of interest.
+      description: Get copy number regions of interest, e.g. statistically significant regions of amplification or deletion identified by the GISTIC algorithm.
+      parameters:
+        - name: study_id
+          in: query
+          description: Study ID.
+          required: true
           type: string
-          description:  Official gene symbol.
-        genome_coordinates:
+        - name:  data_set_id
+          in:  query
+          description:  Data Set ID.
+          required:  true
           type:  string
-          description:  Genomic coordinates.
-        signal_value:
+      responses:
+        200:
+          description: an array of copy number region objects.
+          schema:
+            title:  RegionsOfInterest
+            type: array
+            items:
+              $ref: RegionOfInterest
+              
+definitions:
+  SignalData:
+    properties:
+      stable_sample_id:
+        type: integer
+        format: int32
+        description: Sample ID.
+      gene_id:
+        type: integer
+        format: int32
+        description: Entrez gene ID.
+      gene_symbol:
+        type: string
+        description:  Official gene symbol.
+      genome_coordinates:
+        type:  string
+        description:  Genomic coordinates.
+      signal_value:
+        type:  number
+        description:  Signal intensity.
+      annotation_list:
+        description:  Curated annotations regarding the signal or event.
+        type: array
+        items:
+          type: string
+  RegionOfInterest:
+      properties:
+        cytoband:
+          type: string
+          description: Cytoband.
+        q_value:
+          type:  number
+          description:  Q-Value.
+        residual_q_value:
+          type:  number
+          description:  Residual Q-Value.
+        wide_peak_boundaries:
           type:  string
-          description:  Signal intensity or annotation.
+          description:  Wide peak boundaries.
+        entrez_gene_list:
+          type:  array
+          items:
+            type: integer
+            format: int32
+            
