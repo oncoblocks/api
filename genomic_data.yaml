@@ -82,6 +82,54 @@ paths:
             type: array
             items:
               $ref: RegionOfInterest
+  /mutations:
+    get:
+      summary: Get mutation data.
+      description: Retrieves mutation data by mutation properties, sample, or gene.
+      parameters:
+        - name: sample_id
+          in: query
+          description: Samples ID(s).
+          required: false
+          type: array
+          items:
+            type: string
+        - name: entrez_gene_id
+          in: query
+          description: Entrez Gene ID(s).
+          required: false
+          type: array
+          items:
+            type: integer
+        - name: study_id
+          in: query
+          description: Study ID(s).
+          required: false
+          type: array
+          items:
+            type: string
+        - name:  data_set_id
+          in:  query
+          description:  Data set ID.
+          required:  false
+          type:  array
+          items:
+            type: integer
+        - name: variant_classification
+          in: query
+          description: Mutation type(s).
+          required: false
+          type: array
+          items:
+            type: string
+      responses:
+        200:
+          description: an array of mutation data objects.
+          schema:
+            title:  MutationData
+            type: array
+            items:
+              $ref: MutationData
               
 definitions:
   SignalData:
@@ -127,4 +175,97 @@ definitions:
           items:
             type: integer
             format: int32
+  MutationData:
+    properties:
+      stable_sample_id:
+        type: integer
+        format: int32
+        description: Sample ID.
+      gene_id:
+        type: integer
+        format: int32
+        description: Entrez gene ID.
+      gene_symbol:
+        type: string
+        description:  Official gene symbol.
+      reference_genome:
+        type: string
+        description: Reference genome to which the DNA coordinates are aligned.
+      chromosome:
+        type: string
+        description: Chromosome in which the mutation is located.
+      dna_start_position:
+        type: integer
+        format: int32
+        description: Start position of the mutation in genomic DNA.
+      dna_end_position:
+        type: integer
+        format: int32
+        description: End position of the mutation in genomic DNA.
+      strand:
+        type: string
+        description: Chromosome strand in which the mutation is located.
+      variant_classification:
+        type: string
+        description: Specific category of mutation.
+      variant_type:
+        type: string
+        description: General category of mutation.
+      reference_allele:
+        type: string
+        description: Nucleotides of the reference DNA sequence.
+      variant_allele:
+        type: string
+        description: Nucelotides of the mutated DNA sequence.
+      alternative_allele_reads:
+        type: integer
+        format: int32
+        description: Number of reads supporting the mutant allele.
+      reference_allele_reads:
+        type: integer
+        format: int32
+        description: Number of reads supporting the wild type allele.
+      dbsnp_rsid:
+        type: string
+        description: dbSNP RS ID of the record of the mutation.
+      annotation_transcript:
+        type: string
+        description: Database ID of the cDNA transcript to which the cDNA coordinates are aligned. 
+      transcript_strand:
+        type: string
+        description: Strand in the reference transcript to which the mutation coordinates are aligned.
+      cdna_change:
+        type: string
+        description: Change in he cDNA sequence.
+      codon_change:
+        type: string
+        description: Change in the cDNA sequence in the context of the codon.
+      protein_change:
+        type: string
+        description: Change in the amino acid sequence.
+      other_transcripts:
+        type: string
+        description: Delimited list of additional transcripts and amino acid changes associated with the genomic DNA mutation.
+      refseq_mrna_id:
+        type: string
+        description: ID of the RefSeq mRNA transcript for the mutated gene.
+      refseq_prot_id:
+        type: string
+        description: ID of the RefSeq amino acid transcript for the mutated protein.
+      swissprot_accession:
+        type: string
+        description: ID of the Swissprot amino acid transcript for the mutated protein.
+      swissprot_entry:
+        type: string
+        description: ID of the Swissprot gene record.
+      uniprot_aa_position:
+        type: integer
+        format: int32
+        description: Mutation position in the Uniprot amino acid transcript.
+      uniprot_region:
+        type: string
+        description: Protein region in which the mutation occurs in the Uniprot transcript.
+      uniprot_site:
+        type: string
+        description: Protein site in which the mutation occurs in the Uniprot transcript.
             
